@@ -29,17 +29,20 @@ def get_fields(pdf_file):
                 field[1] = re_object.group(2)
     return fields
 
-def write_pdf(source, fields, output):
+def write_pdf(source, fields, output, flatten=False):
     '''Takes source file path, list of fdf fields, and output path, and
     creates a filled-out pdf'''
     fdf = forge_fdf(fdf_data_strings=fields)
     with NamedTemporaryFile(delete=False) as file:
         file.write(fdf)
     call = ['pdftk', source, 'fill_form', file.name, 'output', output]
+    if flatten:
+        call.append('flatten')
     try:
         check_output(call)
     except FileNotFoundError:
         raise PdftkNotInstalledError('Could not locate PDFtk installation')
+    check_output(call)
     remove(file.name)
     
 class PdftkNotInstalledError(Exception):
