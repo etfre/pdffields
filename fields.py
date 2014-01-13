@@ -36,6 +36,10 @@ def write_pdf(source, fields, output):
     with NamedTemporaryFile(delete=False) as file:
         file.write(fdf)
     call = ['pdftk', source, 'fill_form', file.name, 'output', output]
+    try:
+        check_output(call)
+    except FileNotFoundError:
+        raise PdftkNotInstalledError('Could not locate PDFtk installation')
     check_output(call)
     remove(file.name)
     
