@@ -42,7 +42,6 @@ def write_pdf(source, fields, output, flatten=False):
         check_output(call)
     except FileNotFoundError:
         raise PdftkNotInstalledError('Could not locate PDFtk installation')
-    check_output(call)
     remove(file.name)
     
 class PdftkNotInstalledError(Exception):
