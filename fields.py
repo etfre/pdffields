@@ -23,10 +23,11 @@ def get_fields(pdf_file):
             field = ['', '']
         elif line:
             re_object = match(r'(\w+): (.+)', line)
-            if re_object.group(1) == 'FieldName':
-                field[0] = re_object.group(2)
-            elif re_object.group(1) == 'FieldValue':
-                field[1] = re_object.group(2)
+            if re_object is not None:
+                if re_object.group(1) == 'FieldName':
+                    field[0] = re_object.group(2)
+                elif re_object.group(1) == 'FieldValue':
+                    field[1] = re_object.group(2)
     return fields
 
 def write_pdf(source, fields, output, flatten=False):
