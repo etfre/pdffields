@@ -6,10 +6,9 @@ from fdfgen import forge_fdf
 
 def get_fields(pdf_file):
     '''
-    Uses pdftk to get a pdf's fields as a string, parses the string
-    and returns the fields as a list of lists, where the field name is
-    the first element in the list and its current value is the second
-    element
+    Use pdftk to get a pdf's fields as a string, parse the string
+    and return the fields as a dictionary, with field names as keys
+    and field values as values.
     '''
     fields = {}
     call = ['pdftk', pdf_file, 'dump_data_fields']
@@ -33,8 +32,8 @@ def get_fields(pdf_file):
 
 def write_pdf(source, fields, output, flatten=False):
     '''
-    Takes source file path, list of fdf fields, and output path, and
-    creates a filled-out pdf
+    Take a source file path, list or dictionary of fdf fields, and
+    output path, and create a filled-out pdf.
     '''
     fdf = forge_fdf(fdf_data_strings=fields)
     with NamedTemporaryFile(delete=False) as file:
