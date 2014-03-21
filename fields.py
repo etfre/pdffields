@@ -11,7 +11,7 @@ and returns the fields as a list of lists, where the field name is
 the first element in the list and its current value is the second
 element
 '''
-    fields = []
+    fields = {}
     call = ['pdftk', pdf_file, 'dump_data_fields']
     try:
         data_string = check_output(call).decode('utf8')
@@ -21,17 +21,14 @@ element
     if len(data_list) == 1:
         data_list = data_string.split('\n')
     for index, line in enumerate(data_list):
-        if line == '---':
-            if index != 0:
-                fields.append(field)
-            field = ['', '']
-        elif line:
+        if line:
             re_object = match(r'(\w+): (.+)', line)
             if re_object is not None:
                 if re_object.group(1) == 'FieldName':
-                    field[0] = re_object.group(2)
+                    key = re_object.group(2)
+                    fields[key] = ''
                 elif re_object.group(1) == 'FieldValue':
-                    field[1] = re_object.group(2)
+                    fields[key] = re_object.group(2)
     return fields
 
 def write_pdf(source, fields, output, flatten=False):
