@@ -20,7 +20,7 @@ def get_fields(pdf_file):
     data_list = data_string.split('\r\n')
     if len(data_list) == 1:
         data_list = data_string.split('\n')
-    for index, line in enumerate(data_list):
+    for line in data_list:
         if line:
             re_object = match(r'(\w+): (.+)', line)
             if re_object is not None:
