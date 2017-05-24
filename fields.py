@@ -11,7 +11,7 @@ def get_fields(pdf_file):
     and field values as values.
     '''
     fields = {}
-    call = ['pdftk', pdf_file, 'dump_data_fields']
+    call = ['pdftk', pdf_file, 'dump_data_fields_utf8']
     try:
         data_string = check_output(call).decode('utf8')
     except FileNotFoundError:
@@ -46,6 +46,6 @@ def write_pdf(source, fields, output, flatten=False):
     except FileNotFoundError:
         raise PdftkNotInstalledError('Could not locate PDFtk installation')
     remove(file.name)
-    
+
 class PdftkNotInstalledError(Exception):
     pass
