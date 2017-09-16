@@ -4,6 +4,21 @@ from tempfile import NamedTemporaryFile
 from subprocess import check_output
 from fdfgen import forge_fdf
 
+def combine_pdfs(list_of_pdfs, outfile):
+    '''
+    Use pdftk to combine multiple pdfs into a signle pdf
+    '''
+    call = ['pdftk']
+    call += list_of_pdfs
+    call += ['cat', 'output']
+    call += [outfile]
+    print(" ".join(call))
+    try:
+        data_string = check_output(call).decode('utf8')
+    except FileNotFoundError:
+        raise PdftkNotInstalledError('Could not locate PDFtk installation')
+    return outfile
+
 def get_fields(pdf_file):
     '''
     Use pdftk to get a pdf's fields as a string, parse the string
@@ -11,7 +26,7 @@ def get_fields(pdf_file):
     and field values as values.
     '''
     fields = {}
-    call = ['pdftk', pdf_file, 'dump_data_fields']
+    call = ['pdftk', pdf_file, 'dump_data_fields_utf8']
     try:
         data_string = check_output(call).decode('utf8')
     except FileNotFoundError:
@@ -46,6 +61,6 @@ def write_pdf(source, fields, output, flatten=False):
     except FileNotFoundError:
         raise PdftkNotInstalledError('Could not locate PDFtk installation')
     remove(file.name)
-    
+
 class PdftkNotInstalledError(Exception):
     pass
